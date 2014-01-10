@@ -13,15 +13,25 @@ data Device = Device { id_device :: String,
                        fall_back :: String
                      } deriving (Eq,Show,Read)
 					 
-data Group = Group { id_device_ref :: String,
-					 id_group :: String
+data Group = Group { id_group :: String
                    } deriving (Eq,Show,Read)
 
-data Capability = Capability { id_group_ref :: String,
+data Capability = Capability { id_ref :: String,
 					   name :: String, 
                        value :: String
                      } deriving (Eq,Show,Read)
 				   
+
+	
+cargararchivo :: FilePath -> IO [String]
+cargararchivo arch = do	
+				codigo <- readFile arch
+				return (lines codigo)
+				
+printlista [] = return ()
+printlista (x:xs) = do
+				putStrLn x
+				--printlista xs
 main = do 
 	putStrLn "Parseo de XML"
 	putStrLn ""
@@ -35,16 +45,12 @@ main = do
 	putStrLn "*                                   *"
 	putStrLn "*************************************"
 	putStrLn ""
-	putStrLn ("Leyendo el archivo test.xml")
-	cargararchivo "test.xml"
+	putStrLn ("Leyendo el archivo device.xml")
+	xml <- cargararchivo "device.xml"
+	printlista xml
 	putStrLn "cargado de documento exitoso"
 	
 	
-	
-	
-cargararchivo arch = do
-						codigo <- readFile arch
-						putStrLn codigo
 
 						
 						
