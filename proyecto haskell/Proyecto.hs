@@ -29,10 +29,19 @@ cargararchivo arch = do
 				codigo <- readFile arch
 				return (lines codigo)
 				
+printflistanueva [] = return()
+printflistanueva (x:xs) = do
+				putStrLn x
+				printflistanueva xs
+				
+				
 printlista [] = return ()
 printlista (x:xs) = do
-				putStrLn x
-				--printlista xs
+				if isInfixOf "<devices>" x then do
+					printflistanueva xs
+				else
+					printlista xs
+				
 main = do 
 	putStrLn "Parseo de XML"
 	putStrLn ""
@@ -47,9 +56,10 @@ main = do
 	putStrLn "*************************************"
 	putStrLn ""
 	putStrLn ("Leyendo el archivo device.xml")
-	xml <- cargararchivo "device.xml"
+	xml <- cargararchivo "test.xml"
 	printlista xml
 	putStrLn "cargado de documento exitoso"
+
 	
 	
 
