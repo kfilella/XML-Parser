@@ -13,10 +13,11 @@ data Device = Device { id_device :: String,
                        fall_back :: String
                      } deriving (Eq,Show,Read)
 					 
-data Group = Group { id_group :: String
+data Group = Group { id_group :: String,
+					 id_device_ref :: String
                    } deriving (Eq,Show,Read)
 
-data Capability = Capability { id_ref :: String,
+data Capability = Capability { id_group_ref :: String,
 					   name :: String, 
                        value :: String
                      } deriving (Eq,Show,Read)
