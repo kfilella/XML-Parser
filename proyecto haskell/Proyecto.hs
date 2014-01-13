@@ -8,21 +8,16 @@ import Data.List.Split
 
 -}
 
-
-
-
 data Device = Device { id_device :: String, 
                        user_agent :: String, 
                        fall_back :: String
                      } deriving (Eq,Show,Read)
 					 
-data Group = Group { id_group :: String,
-					 id_device_ref :: String
+data Group = Group { id_group :: String
                    } deriving (Eq,Show,Read)
 
-data Capability = Capability { id_group_ref :: String,
-					   name :: String, 
-                       value :: String
+data Capability = Capability { name :: String,
+					value :: String
                      } deriving (Eq,Show,Read)
 				   
 
@@ -31,9 +26,6 @@ cargararchivo :: FilePath -> IO [String]
 cargararchivo arch = do	
 				codigo <- readFile arch
 				return (lines codigo)
-				
-				
-
 				
 --printflistanueva [] = return()
 --printflistanueva (x:xs) = do
@@ -46,15 +38,16 @@ imprimir []=return()
 imprimir (x:xs) = do
 			putStrLn x
 			imprimir xs
-	
+			
+printDevice :: Device -> String
+printDevice(Device id user fall)="ID: "++id++" User Agent: "++user++" Fall Back: "++fall
+
 espacios ::[String]->[String]
 espacios []=[]
 espacios (x:xs)= do
 	if x==""
 	then []++espacios xs
 	else [x]++espacios xs
-		
-
 		
 device [] =return()
 device x = do
@@ -73,7 +66,6 @@ listdevic (x:xs) = do
 				else putStrLn ""
 				listdevic xs
 
-					
 lista [] = return ()
 lista (x:xs) = do
 				if isInfixOf "<devices>" x then do
@@ -95,22 +87,10 @@ main = do
 	putStrLn "*************************************"
 	putStrLn ""
 	putStrLn ("Leyendo el archivo device.xml")
-	xml <- cargararchivo "device.xml"
+	xml <- cargararchivo "test1.xml"
 	lista xml
 	putStrLn "cargado de documento exitoso"
 	putStrLn "*   Por favor ingrese la caracteristica del device que desea consultar                                *"
 	putStrLn "*   1) Nombre(ID) , user agent (nombre asociado)  o Fall Back   *"
 	putStrLn "*   2) Capability      *"
-	opcion <- getLine
-	
-
-elimespacios ::[String]->[String]
-elimespacios [] = []
-elimespacios (x:xs)=do
-	if x==""
-	then []++elimespacios xs
-	else [x]++elimespacios xs
-	
-
-						
-						
+	--opcion <- getLine
