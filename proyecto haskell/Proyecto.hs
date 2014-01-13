@@ -65,6 +65,8 @@ listdevic (x:xs) = do
 						device x
 				else putStrLn ""
 				listdevic xs
+				
+				
 
 lista [] = return ()
 lista (x:xs) = do
@@ -72,6 +74,7 @@ lista (x:xs) = do
 					listdevic xs
 				else
 					lista xs
+				
 				
 main = do 
 	putStrLn "Parseo de XML"
@@ -90,7 +93,31 @@ main = do
 	xml <- cargararchivo "test1.xml"
 	lista xml
 	putStrLn "cargado de documento exitoso"
-	putStrLn "*   Por favor ingrese la caracteristica del device que desea consultar                                *"
-	putStrLn "*   1) Nombre(ID) , user agent (nombre asociado)  o Fall Back   *"
-	putStrLn "*   2) Capability      *"
-	--opcion <- getLine
+	--menu1 xml
+	
+	
+	
+--menu1 :: [String] -> IO ()
+--menu1 [] = return ()
+--menu1 (x:xs) = do
+			--	if isInfixOf "<device" x 
+			--	then do
+				--		putStrLn ""
+				--		
+				--		putStrLn "1 -- Nombre(ID) del device "
+				--		putStrLn "2 -- Capability del device"
+				--		opcion <- getLine
+				--		if opcion == "1"
+				--		then do putStrLn "escriba el  Nombre(ID) del device "
+				--		        nombre <- getLine
+				--		        devicesConNombre nombre
+				--		else if number == "2"
+				--		then do putStrLn "escriba la capability del device"
+				--		        capability <- getLine
+				--				capabilityDevices capability
+				--			   else do putStrLn "opcion no valida"
+							 
+						
+						
+				--else
+				--	menu1 xs	
