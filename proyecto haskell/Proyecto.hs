@@ -8,6 +8,9 @@ import Data.List.Split
 
 -}
 
+
+
+
 data Device = Device { id_device :: String, 
                        user_agent :: String, 
                        fall_back :: String
@@ -52,6 +55,7 @@ espacios (x:xs)= do
 	else [x]++espacios xs
 		
 
+		
 device [] =return()
 device x = do
 		 let l = splitOneOf("<>=/ \\\"") x --AQUI YA C SEPARAN LOS DATOS Y C GUARDAN EN UNA LISTA
@@ -91,9 +95,14 @@ main = do
 	putStrLn "*************************************"
 	putStrLn ""
 	putStrLn ("Leyendo el archivo device.xml")
-	xml <- cargararchivo "test1.xml"
+	xml <- cargararchivo "device.xml"
 	lista xml
 	putStrLn "cargado de documento exitoso"
+	putStrLn "*   Por favor ingrese la caracteristica del device que desea consultar                                *"
+	putStrLn "*   1) Nombre(ID) , user agent (nombre asociado)  o Fall Back   *"
+	putStrLn "*   2) Capability      *"
+	opcion <- getLine
+	
 
 elimespacios ::[String]->[String]
 elimespacios [] = []
