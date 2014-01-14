@@ -8,24 +8,38 @@ import Data.List.Split
 
 -}
 
+
 data Device = Device { id_device :: String, 
                        user_agent :: String, 
                        fall_back :: String
                      } deriving (Eq,Show,Read)
 					 
-data Group = Group { id_group :: String
-                   } deriving (Eq,Show,Read)
+data Group = Group { --id_device_ref :: String
+						id_group :: String
+					} deriving (Eq,Show,Read)
 
-data Capability = Capability { name :: String,
-					value :: String
+data Capability = Capability { --id_group_ref :: String,
+					   name :: String, 
+                       value :: String
                      } deriving (Eq,Show,Read)
+					 
+					 
 				   
+data Grupo =Grupo {dev :: Device, 
+                    gp :: Group, 
+                     cp :: Capability
+					}deriving (Eq,Show,Read)
 
 	
 cargararchivo :: FilePath -> IO [String]
 cargararchivo arch = do	
 				codigo <- readFile arch
 				return (lines codigo)
+				
+				
+getIdDevice :: Device -> String
+getIdDevice (Device id ua fb) = id
+				
 				
 --printflistanueva [] = return()
 --printflistanueva (x:xs) = do
@@ -38,43 +52,145 @@ imprimir []=return()
 imprimir (x:xs) = do
 			putStrLn x
 			imprimir xs
-			
-printDevice :: Device -> String
-printDevice(Device id user fall)="ID: "++id++" User Agent: "++user++" Fall Back: "++fall
 
+impridevice :: Device -> String
+impridevice (Device id u f) = "Device: id-> "++id++" user_agent->"++u++" fall_back->"++f
+
+imprigroup :: Group-> String
+imprigroup(Group id)= "Group: id="++id
+
+impricapability :: Capability -> String
+impricapability(Capability n v)= "Capability: name= "++n++" value="++v
+	
 espacios ::[String]->[String]
 espacios []=[]
 espacios (x:xs)= do
 	if x==""
 	then []++espacios xs
 	else [x]++espacios xs
-		
-device [] =return()
-device x = do
-		 let l = splitOneOf("<>=/ \\\"") x --AQUI YA C SEPARAN LOS DATOS Y C GUARDAN EN UNA LISTA
-		 let listsinespacio= espacios l
-		 imprimir listsinespacio
-	     
-listdevic [] =return()
-listdevic (x:xs) = do
-				if isInfixOf "<group" x then do
-					device x
-				else if isInfixOf "<product" x then do
-						device x
-				else if isInfixOf "<capability" x then 
-						device x
-				else putStrLn ""
-				listdevic xs
-				
-				
+	
+listacapability[]=[]
+listacapability (x:xs) = do
+		if (x=="name") then do
+			[head xs]++listacapability xs
+		else if (x=="value") then do
+			if (xs==[]) then do
+				xs++["none"]
+				else [head xs]++listacapability xs
+		else listacapability xs
 
-lista [] = return ()
+
+listagroup[]=[]
+listagroup (x:xs) = do
+		if (x=="id") then do
+			[head xs]++listagroup xs
+		else listagroup xs
+	
+listadevice ::[String] -> [String]	
+listadevice[]=[]
+listadevice (x:xs) = do
+		if (x=="id") then do
+			[head xs]++listadevice xs
+		else if (x=="user_agent")then do
+		    [head xs]++listadevice xs
+			--if(head xs == "fall_back") then do
+			--	[x]++ ""
+			--else [head xs]++listadevice xs
+		else if (x=="fall_back") then do
+			[head xs]++listadevice xs
+		else listadevice xs
+			
+		
+		
+createdevice ::[String] -> Device
+createdevice [] = Device "" "" ""
+createdevice (x:y:zs) = do
+	Device x y (head zs)
+	
+createcapability [] = Capability "" ""
+createcapability (x:ys) = do
+	Capability x (head ys)
+
+
+creategroup [] = Group ""
+creategroup (x:ys) = do
+	Group x
+
+	
+creategrupo ::Device->Group->Capability->Grupo
+creategrupo _ _ _ = Grupo (Device "" "" "") (Group "") (Capability "" "")
+creategrupo dev gp cp = do
+	Grupo dev gp cp
+
+
+	
+funcioncapabi x  = do
+			let list = listacapability x
+			if(list/=[]) then createcapability list
+			else Capability "" ""
+
+funciongroup x  = do
+			let list = listagroup x
+			if(list/=[]) then creategroup list
+			else Group ""
+	
+--createdevice ::[String] -> Device	
+funciondevice::[String]	-> Device	
+funciondevice	x  = do
+			let list = listadevice x
+			if(list/=[]) then createdevice list
+			else Device "" "" ""
+		
+
+		--AQUI SE DEBE HACER TODO
+prodt ::[String]->Device->Group->Capability->[Grupo]
+prodt [] _ _ _ =[]
+prodt (x:xs) dev gp cp = do
+	let l = splitOneOf("<>=/ \\\"") x --AQUI YA C SEPARAN LOS DATOS Y C GUARDAN EN UNA LISTA
+	let listsinespacio= espacios l  --- lista de le linea sin espacios
+	let lista=[]
+	if (head listsinespacio) == "device" then do
+			let devi = funciondevice (tail listsinespacio)
+			--putStrLn (impridevice devi)
+			[]++prodt xs dev gp cp
+	else if (head listsinespacio) == "group" then do
+			let grou = funciongroup (tail listsinespacio)
+			--let idDe = getDevice dev
+			--putStrLn (imprigroup grou)
+			[]++prodt xs dev gp cp
+	else if (head listsinespacio) == "capability" then do
+			
+			let capa = funcioncapabi (tail listsinespacio)
+			let grupo = creategrupo dev gp capa
+			--putStrLn (impricapability  capa)
+			[grupo]++prodt xs dev gp cp
+			
+	else lista++prodt xs dev gp cp
+	--putStrLn impridevice devi
+	--imprimir listsinespacio
+	     
+{-listdevic [] =return()
+listdevic (x:xs) = do
+				let lista=[]
+				if isInfixOf "<device" x then do
+					lista ++ prodt x 
+					
+				else if isInfixOf "<group" x then do
+					lista ++ prodt x 
+					
+				else if isInfixOf "<capability" x then 
+					lista ++ prodt x 
+					
+				else putStrLn " "
+				listdevic xs
+-}
+					
+lista :: [String]->[Grupo]
 lista (x:xs) = do
 				if isInfixOf "<devices>" x then do
-					listdevic xs
+					prodt xs (Device "" "" "") (Group "") (Capability "" "")
 				else
 					lista xs
-				
 				
 main = do 
 	putStrLn "Parseo de XML"
@@ -91,33 +207,16 @@ main = do
 	putStrLn ""
 	putStrLn ("Leyendo el archivo device.xml")
 	xml <- cargararchivo "test1.xml"
-	lista xml
+	let lis = lista xml
 	putStrLn "cargado de documento exitoso"
-	--menu1 xml
+
+elimespacios ::[String]->[String]
+elimespacios [] = []
+elimespacios (x:xs)=do
+	if x==""
+	then []++elimespacios xs
+	else [x]++elimespacios xs
 	
-	
-	
---menu1 :: [String] -> IO ()
---menu1 [] = return ()
---menu1 (x:xs) = do
-			--	if isInfixOf "<device" x 
-			--	then do
-				--		putStrLn ""
-				--		
-				--		putStrLn "1 -- Nombre(ID) del device "
-				--		putStrLn "2 -- Capability del device"
-				--		opcion <- getLine
-				--		if opcion == "1"
-				--		then do putStrLn "escriba el  Nombre(ID) del device "
-				--		        nombre <- getLine
-				--		        devicesConNombre nombre
-				--		else if number == "2"
-				--		then do putStrLn "escriba la capability del device"
-				--		        capability <- getLine
-				--				capabilityDevices capability
-				--			   else do putStrLn "opcion no valida"
-							 
+
 						
 						
-				--else
-				--	menu1 xs	
