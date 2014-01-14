@@ -14,22 +14,23 @@ data Device = Device { id_device :: String,
                        fall_back :: String
                      } deriving (Eq,Show,Read)
 					 
-data Group = Group { --id_device_ref :: String
-						id_group :: String
+data Group = Group { id_group :: String
 					} deriving (Eq,Show,Read)
 
-data Capability = Capability { --id_group_ref :: String,
-					   name :: String, 
+data Capability = Capability {  name :: String, 
                        value :: String
                      } deriving (Eq,Show,Read)
 					 
-					 
-				   
-data Grupo =Grupo {dev :: Device, 
+	   
+data Grupo = Grupo {dev :: Device, 
                     gp :: Group, 
                      cp :: Capability
 					}deriving (Eq,Show,Read)
-
+					
+--cargarlistafull :: [String] -> [FullDevice]
+--cargarlistafull (x:xs) = do
+			--if(x=="device")
+			
 	
 cargararchivo :: FilePath -> IO [String]
 cargararchivo arch = do	
@@ -47,10 +48,21 @@ getIdDevice (Device id ua fb) = id
 				--imprimir listp
 				
 				--printflistanueva xs
-				
-imprimir []=return()
-imprimir (x:xs) = do
-			putStrLn x
+imprimir:: [Grupo]->int->IO()				
+imprimir [] a=return()
+imprimir (x:xs) a= do
+	        if(a=0) then do
+					impridevice (head x)
+					imprimir xs 1
+			else if (a=1) then do 
+					imprigroup (head x)
+					imprimir xs 2
+			else if (a=2) then do
+					impricapability (head x)
+					imprimir xs 0
+			else imprimir xs 0
+			
+			--putStrLn x
 			imprimir xs
 
 impridevice :: Device -> String
@@ -122,8 +134,6 @@ creategrupo _ _ _ = Grupo (Device "" "" "") (Group "") (Capability "" "")
 creategrupo dev gp cp = do
 	Grupo dev gp cp
 
-
-	
 funcioncapabi x  = do
 			let list = listacapability x
 			if(list/=[]) then createcapability list
@@ -134,13 +144,14 @@ funciongroup x  = do
 			if(list/=[]) then creategroup list
 			else Group ""
 	
---createdevice ::[String] -> Device	
 funciondevice::[String]	-> Device	
 funciondevice	x  = do
 			let list = listadevice x
 			if(list/=[]) then createdevice list
 			else Device "" "" ""
-		
+
+
+imprimirlista1 :: 
 
 		--AQUI SE DEBE HACER TODO
 prodt ::[String]->Device->Group->Capability->[Grupo]
