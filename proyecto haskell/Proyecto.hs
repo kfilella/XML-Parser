@@ -80,33 +80,55 @@ espacios (x:xs)= do
 		--	else buscaCar xs car
 			
 			
-		
+creardevice :: [String] -> Device
+creardevice [] = Device "" "" ""
+creardevice (a:b:c:d:e) = do
+			if(d=="fall_back") then do
+			return Device(b "null" e)
+			else
+			return Device(b d (tail e))
+
+crearcapability :: [String] -> int -> Capability
+crearcapability [] = Capability ""
+crearcapability (a:b:c) = do
+			if((tail c)=="value") then do
+			return Capability(b "null")
+			else
+			return Capability(b (tail c))
+			
+creargroup :: [String] -> int -> Group
+creargroup [] = Group ""
+creargroup a = do
+			return Group a		
 		
 	
 	
 		
-device [] car =return()
-device x car= do
+device [] car [] [] [] = return()
+device x car ld lg lc = do
 		 let l = splitOneOf("<>=/ \\\"") x --AQUI YA C SEPARAN LOS DATOS Y C GUARDAN EN UNA LISTA
 		 let listsinespacio= espacios l
 		-- let listcount=[]
-		 imprimir listsinespacio car --listcount
-		
-		
+		 if (head listasinespacio=="device")
+			ld++creardevice(tail listasinespacio)
+		 if (head listasinespacio=="group")
+			lg++creargroup(tail listasinespacio)
+		 if (head listasinespacio=="capability")
+			lc++crearcapability(tail listasinespacio)
+		imprimir listsinespacio car --listcount
 	     
-listdevic [] car = return()
-listdevic (x:xs) car = do
+listdevic [] car [] [] []= return()
+listdevic (x:xs) car ld lg lc= do
 				if isInfixOf "<device" x then do
-					device x car
-					listdevic xs car
+					device x car ld lg lc
+					listdevic xs car ld lg lc
 				else if isInfixOf "<group" x then do
-						device x car
-						listdevic xs car
+						device x car ld lg lc
+						listdevic xs car ld lg lc
 				else if isInfixOf "<capability" x then do
-						device x car
-						listdevic xs car
-				else listdevic xs car
-				
+						device x car ld lg lc
+						listdevic xs car ld lg lc
+				else listdevic xs car ld lg lc
 				
 				
 				
@@ -115,8 +137,11 @@ listdevic (x:xs) car = do
 
 lista [] car = return ()
 lista (x:xs) car = do
+				let listadevices = []
+				let listagroups = []
+				let listacapabilities = []
 				if isInfixOf "<devices>" x then do
-					listdevic xs car
+					listdevic xs car listadevices listagroups listacapabilities
 				else
 					lista xs car
 				
