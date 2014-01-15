@@ -83,55 +83,74 @@ espacios (x:xs)= do
 creardevice :: [String] -> Device
 creardevice [] = Device "" "" ""
 creardevice (a:b:c:d:e) = do
+			let k="none"
 			if(d=="fall_back") then do
-			return Device b "null" e
-			else return Device b d (tail e)
+				Device b k (head e)
+			else Device b d (last e)
 			
 
-crearcapability :: [String] -> int -> Capability
-crearcapability [] = Capability ""
-crearcapability (a:b:c) = do
-			if((tail c)=="value") then do
-			return Capability(b "null")
-			else return Capability(b (tail c))
+crearcapability :: [String] -> Capability
+crearcapability [] = Capability "" ""
+crearcapability (a:b:c) = do 
+		let k = "none"
+		if((last c)=="value") then do
+			Capability b k
+		else  Capability b (last c)
 			
 			
-creargroup :: [String] -> int -> Group
+creargroup :: [String] -> Group
 creargroup [] = Group ""
 creargroup a = do
-			return Group a		
+		Group (last a)		
 		
 	
 	
-		
-device [] car [] [] [] = return()
-device x car ld lg lc = do
+device1 :: String->String->Device
+device1 [] car = Device "" "" ""
+device1 x car = do
 		 let l = splitOneOf("<>=/ \\\"") x --AQUI YA C SEPARAN LOS DATOS Y C GUARDAN EN UNA LISTA
 		 let listsinespacio= espacios l
-		-- let listcount=[]
-		 if (head listasinespacio)=="device" then do
-			ld++creardevice(tail listasinespacio)
-			else let asd=1
-		 if (head listasinespacio)=="group" then do
-			lg++creargroup(tail listasinespacio)]
-			else let asd=1
-		 if (head listasinespacio)=="capability" then do
-			lc++crearcapability(tail listasinespacio)
-			else let asd=1
-		imprimir listsinespacio car --listcount
+		 --imprimir listsinespacio car
+		 if (head listsinespacio)=="device" then do
+			creardevice(tail listsinespacio)
+			else Device "" "" ""
+			
+device2 ::String->String->Group
+device2 [] car = Group ""
+device2 x car = do	
+		 let l = splitOneOf("<>=/ \\\"") x --AQUI YA C SEPARAN LOS DATOS Y C GUARDAN EN UNA LISTA
+		 let listsinespacio= espacios l
+		 --imprimir listsinespacio car		
+		 if (head listsinespacio)=="group" then do
+			creargroup(tail listsinespacio)
+			else Group ""
+			
+device3 ::String->String->Capability
+device3 [] car = Capability "" ""
+device3 x car = do	
+		 let l = splitOneOf("<>=/ \\\"") x --AQUI YA C SEPARAN LOS DATOS Y C GUARDAN EN UNA LISTA
+		 let listsinespacio= espacios l
+		 --imprimir listsinespacio car
+		 if (head listsinespacio)=="capability" then do
+			crearcapability(tail listsinespacio)
+			else Capability "" ""
+		
 	     
-listdevic [] car [] [] []= return()
-listdevic (x:xs) car ld lg lc= do
+listdevic [] car = return()
+listdevic (x:xs) car = do
+				let listadevices = []
+				let listagroups = []
+				let listacapabilities = []
 				if isInfixOf "<device" x then do
-					device x car ld lg lc
-					listdevic xs car ld lg lc
+					listadevices++[device1  x car]
+					listdevic xs car
 				else if isInfixOf "<group" x then do
-						device x car ld lg lc
-						listdevic xs car ld lg lc
+					listagroups++[device2 x car]
+					listdevic xs car
 				else if isInfixOf "<capability" x then do
-						device x car ld lg lc
-						listdevic xs car ld lg lc
-				else listdevic xs car ld lg lc
+					listacapabilities++[device3 x car]
+					listdevic xs car
+				else listdevic xs car
 				
 				
 				
@@ -140,11 +159,9 @@ listdevic (x:xs) car ld lg lc= do
 
 lista [] car = return ()
 lista (x:xs) car = do
-				let listadevices = []
-				let listagroups = []
-				let listacapabilities = []
+				
 				if isInfixOf "<devices>" x then do
-					listdevic xs car listadevices listagroups listacapabilities
+					listdevic xs car
 				else
 					lista xs car
 				
