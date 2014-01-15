@@ -84,17 +84,17 @@ creardevice :: [String] -> Device
 creardevice [] = Device "" "" ""
 creardevice (a:b:c:d:e) = do
 			if(d=="fall_back") then do
-			return Device(b "null" e)
-			else
-			return Device(b d (tail e))
+			return Device b "null" e
+			else return Device b d (tail e)
+			
 
 crearcapability :: [String] -> int -> Capability
 crearcapability [] = Capability ""
 crearcapability (a:b:c) = do
 			if((tail c)=="value") then do
 			return Capability(b "null")
-			else
-			return Capability(b (tail c))
+			else return Capability(b (tail c))
+			
 			
 creargroup :: [String] -> int -> Group
 creargroup [] = Group ""
@@ -109,12 +109,15 @@ device x car ld lg lc = do
 		 let l = splitOneOf("<>=/ \\\"") x --AQUI YA C SEPARAN LOS DATOS Y C GUARDAN EN UNA LISTA
 		 let listsinespacio= espacios l
 		-- let listcount=[]
-		 if (head listasinespacio=="device")
+		 if (head listasinespacio)=="device" then do
 			ld++creardevice(tail listasinespacio)
-		 if (head listasinespacio=="group")
-			lg++creargroup(tail listasinespacio)
-		 if (head listasinespacio=="capability")
+			else let asd=1
+		 if (head listasinespacio)=="group" then do
+			lg++creargroup(tail listasinespacio)]
+			else let asd=1
+		 if (head listasinespacio)=="capability" then do
 			lc++crearcapability(tail listasinespacio)
+			else let asd=1
 		imprimir listsinespacio car --listcount
 	     
 listdevic [] car [] [] []= return()
