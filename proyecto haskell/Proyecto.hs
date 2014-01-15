@@ -33,31 +33,34 @@ cargararchivo arch = do
 				--imprimir listp
 				
 				--printflistanueva xs
-buscarDevice [] id= return ()
-buscarDevice (a:b:c:d) id =do
-				if a==id then do
-					if c=="fall_back" then do
-					putStrLn "ID:"++a++"user_agent:  fall_back:"++d 
-					else putStrLn ""
+--buscarDevice [] id= return ()
+--buscarDevice (a:b:c:d) id =do
+--				if a==id then do
+	--				if c=="fall_back" then do
+		--			putStrLn "ID:"++a++"user_agent:  fall_back:"++d 
+			--		else putStrLn ""
 						--putStrLn "ID:"++a++"user_agent:"++c++"fall_back:"++d
-			    else putStrLn ""
+			   -- else putStrLn ""
 				
 				
-imprimir [] car id []=return()
-imprimir (x:y:z) car id sl=  do
-			
-			if x=="device"then do
-				 if y== "id" then do
-					 let ido = (head z)
-					else print ""
-				else print ""
-				
+imprimir [] car  =return()
+imprimir (x:xs) car  =  do
 			if x=="name" then do	
-				if  y==car	then do	
-				buscarDevice sl ido
-				putStrLn  y				
-				else imprimir (y++z) car ido sl
-			else imprimir (y++z) car ido sl
+				if  (head xs)==car	then do		
+				--lc++1
+				putStrLn  (head xs)				
+				else imprimir (xs) car 
+			else imprimir (xs) car 
+			--putStrLn (length lc)
+			 
+			--	buscarDevice sl ido
+		--	if x=="device"then do
+		--		 if y== "id" then do
+			--		 let ido = (head z)
+			--		else print ""
+			--	else print ""
+				
+			
 			
 printDevice :: Device -> String
 printDevice(Device id user fall)="ID: "++id++" User Agent: "++user++" Fall Back: "++fall
@@ -86,8 +89,8 @@ device [] car =return()
 device x car= do
 		 let l = splitOneOf("<>=/ \\\"") x --AQUI YA C SEPARAN LOS DATOS Y C GUARDAN EN UNA LISTA
 		 let listsinespacio= espacios l
-		 
-		 imprimir listsinespacio car "00000" listsinespacio
+		-- let listcount=[]
+		 imprimir listsinespacio car --listcount
 		
 		
 	     
@@ -135,6 +138,7 @@ main = do
 	xml <- cargararchivo "test1.xml"
 	putStrLn ("Ingrese la caracteristica o capability que desea consultar")
 	caracteristica <- getLine
+	putStrLn "estos son todas las capabilities "	
 	lista xml caracteristica
 	putStrLn "cargado de documento exitoso"
 	--menu1 xml
