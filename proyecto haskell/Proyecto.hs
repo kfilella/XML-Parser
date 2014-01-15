@@ -19,7 +19,7 @@ data Group = Group { id_group :: String
 data Capability = Capability { name :: String,
 					value :: String
                      } deriving (Eq,Show,Read)
-				   
+					 					 			   
 
 	
 cargararchivo :: FilePath -> IO [String]
@@ -46,11 +46,11 @@ cargararchivo arch = do
 imprimir [] car  =return()
 imprimir (x:xs) car  =  do
 			if x=="name" then do	
-				if  (head xs)==car	then do		
-				--lc++1
+				if  (head xs)==car	then do					
 				putStrLn  (head xs)				
-				else imprimir (xs) car 
-			else imprimir (xs) car 
+				else imprimir (xs) car
+			else imprimir (xs) car
+			--lc++1
 			--putStrLn (length lc)
 			 
 			--	buscarDevice sl ido
@@ -82,75 +82,65 @@ espacios (x:xs)= do
 			
 creardevice :: [String] -> Device
 creardevice [] = Device "" "" ""
-creardevice (a:b:c:d:e) = do
-			let k="none"
+creardevice (a:b:c:d:e) = do	
+			let k = "none"
 			if(d=="fall_back") then do
-				Device b k (head e)
-			else Device b d (last e)
+			 Device b k (head e)
+			else  Device b d (last e)
 			
 
 crearcapability :: [String] -> Capability
 crearcapability [] = Capability "" ""
-crearcapability (a:b:c) = do 
-		let k = "none"
-		if((last c)=="value") then do
-			Capability b k
-		else  Capability b (last c)
+crearcapability (a:b:c) = do	
+			let k = "none"
+			if((last c)=="value") then do
+			 Capability b k
+			else  Capability b (last c)
 			
 			
 creargroup :: [String] -> Group
 creargroup [] = Group ""
 creargroup a = do
-		Group (last a)		
+			 Group (last a)
 		
 	
 	
-device1 :: String->String->Device
-device1 [] car = Device "" "" ""
-device1 x car = do
-		 let l = splitOneOf("<>=/ \\\"") x --AQUI YA C SEPARAN LOS DATOS Y C GUARDAN EN UNA LISTA
-		 let listsinespacio= espacios l
-		 --imprimir listsinespacio car
-		 if (head listsinespacio)=="device" then do
-			creardevice(tail listsinespacio)
-			else Device "" "" ""
-			
-device2 ::String->String->Group
-device2 [] car = Group ""
-device2 x car = do	
-		 let l = splitOneOf("<>=/ \\\"") x --AQUI YA C SEPARAN LOS DATOS Y C GUARDAN EN UNA LISTA
-		 let listsinespacio= espacios l
-		 --imprimir listsinespacio car		
-		 if (head listsinespacio)=="group" then do
-			creargroup(tail listsinespacio)
-			else Group ""
-			
-device3 ::String->String->Capability
-device3 [] car = Capability "" ""
-device3 x car = do	
-		 let l = splitOneOf("<>=/ \\\"") x --AQUI YA C SEPARAN LOS DATOS Y C GUARDAN EN UNA LISTA
-		 let listsinespacio= espacios l
-		 --imprimir listsinespacio car
-		 if (head listsinespacio)=="capability" then do
-			crearcapability(tail listsinespacio)
-			else Capability "" ""
 		
-	     
-listdevic [] car = return()
-listdevic (x:xs) car = do
-				let listadevices = []
-				let listagroups = []
-				let listacapabilities = []
+device [] car [] [] [] = return()
+device x car ld lg lc = do
+		 let l = splitOneOf("<>=/ \\\"") x --AQUI YA C SEPARAN LOS DATOS Y C GUARDAN EN UNA LISTA
+		 let listsinespacio= espacios l		 
+		 let devcc=creardevice(["id","kljh","user_agent","fall_back","tttt"])
+		 listadevices++[devcc]
+		 imprimir listsinespacio car
+		 --if (head listsinespacio)=="device" then do
+			--[creardevice(tail listsinespacio)++ld
+			--else print "no se pudo"
+		 --if (head listsinespacio)=="group" then do
+			--lg++creargroup(tail listsinespacio)
+			--print ""
+			--else print ""
+		 --if (head listsinespacio)=="capability" then do
+			--lc++crearcapability(tail listsinespacio)
+			--print ""
+			--else print ""
+
+
+
+			
+listdevic [] car [] [] []= return()
+listdevic (x:xs) car ld lg lc= do
 				if isInfixOf "<device" x then do
-					listadevices++[device1  x car]
-					listdevic xs car
+					device x car ld lg lc
+					listdevic xs car ld lg lc
 				else if isInfixOf "<group" x then do
-					listagroups++[device2 x car]
-					listdevic xs car
+						device x car ld lg lc
+						listdevic xs car ld lg lc
 				else if isInfixOf "<capability" x then do
-					listacapabilities++[device3 x car]
-					listdevic xs car
-				else listdevic xs car
+						device x car ld lg lc
+						listdevic xs car ld lg lc
+				else listdevic xs car ld lg lc
+				putStrLn ""
 				
 				
 				
@@ -159,9 +149,11 @@ listdevic (x:xs) car = do
 
 lista [] car = return ()
 lista (x:xs) car = do
-				
+				let listadevices = []
+				let listagroups = []
+				let listacapabilities = []
 				if isInfixOf "<devices>" x then do
-					listdevic xs car
+					listdevic xs car listadevices listagroups listacapabilities
 				else
 					lista xs car
 				
@@ -213,4 +205,4 @@ main = do
 						
 						
 				--else
-				--	menu1 xs	
+				--	menu1 xs
