@@ -1,8 +1,9 @@
-import System.IO
+import Data.List.Split
 import Data.Char(toUpper)
 import Data.List
 import Data.Char
-import Data.List.Split
+import System.IO
+import System.Exit
 
 --Estructuras para poder crear nuestra base de datos
 data Device = Device { id_device :: String, 
@@ -153,7 +154,7 @@ funciondevice	x  = do
 			if(list/=[]) then createdevice list
 			else Device "" "" ""
 		
---Función que recibe la lista del archivo cargado y devuelve una lista de tipo de datos Grupo(nuestra base dae datos)
+--Función que recibe la lista del archivo cargado y devuelve una lista de tipo de datos Grupo(nuestra base de datos)
 prodt ::[String]->Device->Group->Capability->[Grupo]
 prodt [] _ _ _ =[]
 prodt (x:xs) devi grou capa = do
@@ -161,15 +162,17 @@ prodt (x:xs) devi grou capa = do
 	let listsinespacio= espacios l 
 	let lista=[]
 	if (head listsinespacio) == "device" then do
-			let devi = funciondevice $ tail listsinespacio
-			[]++prodt xs devi grou capa
+			let dev = funciondevice $ tail listsinespacio
+			let grupo = creategrupo dev grou capa
+			[grupo]++prodt xs dev grou capa
 	else if (head listsinespacio) == "group" then do
-			let grou = funciongroup $ tail listsinespacio
-			[]++prodt xs devi grou capa
+			let gro = funciongroup $ tail listsinespacio
+			let grupo = creategrupo devi gro capa
+			[grupo]++prodt xs devi gro capa
 	else if (head listsinespacio) == "capability" then do
-			let capa = funcioncapabi $ tail listsinespacio
-			let grupo = creategrupo devi grou capa
-			[grupo]++prodt xs devi grou capa
+			let cap = funcioncapabi $ tail listsinespacio
+			let grupo = creategrupo devi grou cap
+			[grupo]++prodt xs devi grou cap
 			
 	else lista++prodt xs devi grou capa
 	
@@ -179,8 +182,64 @@ imprimirgrupos (x:xs)=do
 			putStrLn $ impridevice $ getDevice x
 			putStrLn $ imprigroup $ getGroup x
 			putStrLn $ impricapability $ getCapability x
-			imprimirgrupos xs
+			--imprimirgrupos xs
+--Función que imprime una lista 			
+imprimir []=return()
+imprimir (x:xs)=do
+		putStrLn x
+		imprimir xs
 			
+--Función para buscar un fall_back ingresado por el usuario
+buscarfallbacklista _ []=[]			
+buscarfallbacklista fall (x:xs)=do
+			let iddev= iddevice $ getDevice x
+			let fb= fallbackdevice $ getDevice x
+			if(fall==fb) then do
+				[iddev]++buscarfallbacklista fall xs
+			else []++buscarfallbacklista fall xs
+
+
+--Función para buscar un capability ingresado por el usuario
+buscarcapabilitylista _ []=[]			
+buscarcapabilitylista cap (x:xs)=do
+			let iddev= iddevice $ getDevice x
+			let cp= namecapability $ getCapability x
+			if(cap==cp) then do
+				[iddev]++buscarcapabilitylista cap xs
+			else []++buscarcapabilitylista cap xs
+
+--Función que elimina string repetido de la lista
+eliminarrepetidos [s]=[s]
+eliminarrepetidos (x:xs)=do
+			if (x==(head xs)) then do
+				eliminarrepetidos xs
+			else [x]++eliminarrepetidos xs
+
+			--Función que cuenta los string de la lista
+contador []= 0
+contador x= do
+		length x
+
+--Función pincipal para la busqueda de device
+buscar str lis =do
+		if str=="1" then do
+		 putStrLn "Ingrese el Fall_back que desea buscar:"
+		 opc <- getLine
+		 putStrLn $ "los device con el fall_back "++opc++" son :"
+		 let lsta= eliminarrepetidos $ buscarfallbacklista  opc lis
+		 imprimir lsta
+		 putStrLn ""
+		 putStrLn ("el numero de dispositivos son: "++ show(contador lsta) )
+		else if str=="2" then do
+		 putStrLn "Ingrese el Capability que desea buscar:"
+		 opc <- getLine
+		 putStrLn $ "los device con el capability "++opc++" son :"
+		 let lst = eliminarrepetidos $ buscarcapabilitylista  opc lis
+		 imprimir lst 
+		 putStrLn ""
+		 putStrLn ("el numero de dispositivos son: "++ show(contador lst))
+		
+		else exitSuccess
 				
 
 --Función que elimina los datos "basura" como el encabezado,etc, dejando solo los datos importantes				
@@ -206,10 +265,18 @@ main = do
 	putStrLn "*************************************"
 	putStrLn ""
 	putStrLn ("Leyendo el archivo device.xml")
-	xml <- cargararchivo "test1.xml"
+	xml <- cargararchivo "device.xml"
+	putStrLn "cargado de documento exitoso"
 	let lis = lista xml
 	imprimirgrupos lis
-	putStrLn "cargado de documento exitoso"
+	putStrLn "que desea realizar?"
+	putStrLn "1.-buscar device por fall Back"
+	putStrLn "2.-buscar device por capability"
+	putStrLn "3.-salir"
+	opc <- getLine
+	buscar opc lis
+	
+	
 	
 
 						
