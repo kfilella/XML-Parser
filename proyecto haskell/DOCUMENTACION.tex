@@ -55,7 +55,7 @@
 \usepackage{listings} 
 %%% The "real" document content comes below...
 
-\title{BUSCAMINAS PARA ANDROID}
+\title{XML PARSER}
 %\date{} % Activate to display a given date or no date (if empty),
          % otherwise the current date is printed 
          
@@ -81,9 +81,7 @@ muchisimas variantes en el diseño original del juego.
 Imagenes tomadas de wikipedia
 diseño en cubo tridimensional y diseño con muhcas minas por posicion
 
-\includegraphics[height=5cm]{imagenes/119px-Firefox_Multiple_mines.png}
-\includegraphics[height=5cm]{imagenes/120px-Cube_Minesweeper_3D.png}
-%\includegraphics[height=5cm]{imagenes/File-Xbomb_triangles.png}
+
 \subsection{Objetivo}
 Nuestro objetivo en este proyecto es realizar una fiel implementacion del popular juego Buscaminas para sistemas Operativos Android.
 Sabemos tambien que la competencia en el mercado es amplia por lo cual debemos , ademas de implementar fielmente las funcionalidades del buscaminas de windows, darle un toque personal y diferente  la presentacion del juego
@@ -92,27 +90,27 @@ Sabemos tambien que la competencia en el mercado es amplia por lo cual debemos ,
 \subsection{Desarrollo inicial}
 Inicialmente debido  a la naturaleza del proyecto y a las caracteristicas del curso presente tuvimos que aprender a instalar y manejar las herraminetas de desarrollo adecuadas. Ademas de aprender desde 0 a programar en Android. Con la ventaja de que su entorno de desarrollo default ofrece una IDE mastante amigable al usuario y su lenguaje de programacion es parecido al Java. 
 
-\includegraphics[height=5cm]{imagenes/Android_robot.png}
+
 \section{PROBLEMAS }
 
-Durante el desarrollo de la aplicacion surgieron un sinnumero de problemas que enfrentamos para lograr construir una aplicacion estable y que cumpla con las epecificaciones del juego Buscaminas
-A continuacion esta un breve resumen de los problemas mas importante que nos topamos durante el desarrollo  y lo que hicimos para solucionarlo.
-Los problemas se encuentran en orden cronologico, por lo cual tambien sirven para dar una idea del progreso relativo del proyecto a traves del tiempo.
+
+Problemas en el aprendizaje e implementación del lenguaje Haskell
+Al momento de iniciar el curso de lenguajes de programación nosotros como estudiantes debido al programa de estudios hemos sido iniciados en algunos lenguajes de programación.  Lenguajes como .c, java, matlab , Android  etc.. Estos lenguajes son todos de alguna manera u otra muy similares entre sí. Haskell es el primer lenguaje funcional en nuestro programa de estudio y por consiguiente la dificultad de aprender el funcionamiento y la sintaxis del mismo fue muy elevada. 
+Entre las dificultades del lenguajes las más prominentes fueron la sintaxis y la utilización de contadores.
+
 
 \subsection{primer problema}
-\begin{center}
-Vista de la aplicacion en el dispositivo Android. 
 
-\includegraphics[width=8cm]{imagenes/Screenshot_2013-12-11-08-02-11.png}
-\end{center}
 
-Durante los primeros pasos en el desarrollo de la aplicacion no tuvimos inconvenientes reales. El parecido con el lenguaje de java hizo que facilemente implementasemos los menus y las pantallas de presentacion
-Lo mas dificil de la presentacion y que nos tuvo discutiendo hasta el final fue que clase de botones o celdas utilizariamos para el buscaminas. Button, ToogleButton, ImageButton etc...
+Uno de los problemas más notorios que tuvimos se dio a cabo a la hora de la asignación de los datos a la estructura. 
+Inicialmente, aparecían errores de “match” entre tipos de datos ([String] vs [Char], IO String vs [String], entre otros). Esto lo solucionamos modificando extensivamente las funciones que manipulaban los Strings y los arreglos de Strings para que retornen los tipos de datos correctos. 
+Más adelante, nos encontramos con otro problema muy tedioso, que fue el de la manipulación de listas. Aunque probamos todas nuestras funciones en consola, y funcionaban perfectamente, por alguna razón (aún desconocida para nosotros) estas funciones simplemente no funcionaban a la hora de correr nuestro programa (no se creaban las listas de Devices, Groups, Capabilities, etc). Esto lo solucionamos simplemente modificando la técnica de asignación de datos en la estructura. Creamos el tipo de dato Grupo, que contiene Device, Group y Capability; y nuestra estructura se guarda en una lista [Grupo].
+Posterior a nuestra incómoda experiencia con el uso de listas, nos dimos cuenta que nuestra estructura (que se intentaba guardar en [Grupo]) no estaba siendo guardada correctamente. Esto fue más notorio a la hora de tratar de realizar las consultas, ya que simplemente nos lanzaba un error (“Non-exhaustive procedure”, o algo parecido). La solución de este problema fue uno de los últimos cambios que hicimos en nuestro proyecto, antes de llegar a su etapa final.
 
 \begin{center}
 Vista del Menu Principal
 
-\includegraphics[width=8cm]{imagenes/Screenshot_2013-12-11-08-02-16.png}
+
 \end{center}
 
 \subsection{segundo problema}
@@ -124,7 +122,7 @@ Al parecer nuestro algoritmo de conteo no tenia la suficiente validacion como pa
 \begin{center}
 Vista del la matriz del juego con todos sus elementos. 
 
-\includegraphics[width=8cm]{imagenes/Screenshot_2013-12-11-08-03-01.png}
+
 \end{center}
 
 \subsection{tercer problema }
@@ -148,7 +146,7 @@ Luego de esto el juego podia ejecutarse con un 100% de funcionalidad.
 \begin{center}
 Algoritmo descubrir celdas
 
-\includegraphics[width=8cm]{imagenes/Screenshot_2013-12-11-08-36-13.png}
+
 \end{center}
 
 
@@ -165,7 +163,7 @@ Nos vimos obligados a implementar limites en cuanto al numero minimo de minas qu
 \begin{center}
 interface Personalizado. Incluye actualizacion en tiempo real del limite de minas 
 
-\includegraphics[width=8cm]{imagenes/Screenshot_2013-12-11-08-02-34.png}
+
 \end{center}
 
 
@@ -176,26 +174,17 @@ Luego de varios intentos decidimos implementar las banderas usando el metodo Lon
 
 
 
-\begin{center}
-interface Personalizado. Incluye actualizacion en tiempo real del limite de minas 
 
-\includegraphics[width=8cm]{imagenes/Screenshot_2013-12-11-08-03-31.png}
-\end{center}
 
 
 
 \section{Alcance}
 
-Este proyecto al momento de finalizar este documento posee toda al funcionalidad que se espera de un juego de Buscaminas. Se podria mejorar en la parte estetica y tal vez en el aspecto de facilidad de uso . 
-Debido a el limite de tiempo el scoreboard del juego no esta en orden. Aunque probablemente lo este antes de finalizar la semana. Tenemos aun la limitacion en cuanto al numero de minas en la matriz personalizada, pero a pesar de todo 
-podria decirse que el juego esta listo para ser probado por usuarios fuera del circulo de desarrolladores.
-Ademas tambien hace falta generar el tablero automaticamente luego del primer click
+Aunque pudimos solucionar el problema propuesto, que fue el de crear un XML parser para un archivo con una estructura específica, nuestro XML parser solo funciona para ese documento, con el mismo número de niveles y nombres de atributos. Para poder utilizar este programa como un XML parser general, se le tienen que hacer extensivas modificaciones, no solo en la estructura, sino también en la lógica de asignación de los datos y la manipulación de los Strings y las listas.
+En cuanto a las consultas, nuestro programa realiza las búsquedas recorriendo la lista de Grupos y comparando los Strings. Además, incorpora un contador para los Devices que cumplan con la condición de búsqueda.
 
-\begin{center}
-Pantalla de Victoria
 
-\includegraphics[width=8cm]{imagenes/Screenshot_2013-12-11-08-04-22.png}
-\end{center}
+
 
 \begin{center}
 Ingresa el nombre del ganador
@@ -203,32 +192,26 @@ Ingresa el nombre del ganador
 
 \section{Conclusion}
 
-Como conclusion final a este proyecto de desarrollo, hay dos aspectos que deben ser resaltados, el primero es la medida en la que se ha logrado el objetivo principal, el cual es desarrollar una aplicacion de Buscaminas para Android. 
-El segundo aspecto de esta conclusion tiene que ver con el resultado final, como se compara nuestra aplicacion con el Buscaminas de Windows que utilizamos como modelo. 
+Kevin Filella: Ha decir verdad, no encuentro nada atractivo el uso del lenguaje de programación Haskell. Quizás esto se debe a que vengo de un background de lenguajes imperativos como Java, BASIC, C, C++ y próximamente, Python. La mayor dificultad que tuve a la hora de programar en Haskell, fue entender y acostumbrarme a la recursión, seguido casi de la mano con aprender la sintaxis del lenguaje.
 
-Sobre el desarrollo de la aplicacion , los objetivos principales fueron alcanzados satisfactoriamente. Se logro desarrollar una implementacion del juego Buscaminas para Android. 
-A pesar de esto el juego tiene sus deficiencias pequeñas las cuales no pudieron ser corregidas principalmente por falta de tiempo. Como la scoreboard desordenada y el limite minimo de minas en el tablero.
-Pero la aplicacion es 100% funcional en lo que a jugar Buscaminas se refiere.
 
-Luego de un extensivo periodo de experimentacion y prueba podemos decir que el juego es divertido y funcional. 
-Aunque debido a las caracteristicas de los dispositivos Android la implementacion es limitada con respecto a su contraparte de PC.
-La pantalla tactil no es el metodo mas efectivo para intorducir imputs en un buscaminas. El mouse ofrece mucha mas rapidez y precision en lo que respecta a imput del juego.
-Ademas el tamaño de la pantalla de los dispositivos android hace que no todo el tablero pueda ser mostrado en la pantalla, lo cual hace que jugar Buscaminas sea un poco mas complicado y tedioso
-Otro aspecto es la dificultad innata para colocar na bandera en una celda, ya sea por drag and drop o LongClick, toma demasiado tiempo para ser competitivo con respecto a la version de la computadora. Es decir que un profesional de Buscaminas no puede usar nuestra aplicacion para mejorar su tiempo o su tecnica.
+Edinson Sánchez
 
-A pesar de que el objetivo es realizar una fiel y estable copia del Buscaminas de windows. Nos dimos cuenta que en el App Store ya existen bastantes versiones de buscaminas para Android. Por lo que decidimos darle un estilo visual direrente a nuestra implementacion para asi diferenciarnos de las demas aplicaciones en el mercado. Nos decidimos por un estilo mas natural, con un tema de la jungla y un tablero verde. Lo cual si bien es diferente al clasico ambiente sofisticado del buscaminas de windows, a manera personal nos parece agradable. Aunque para estar seguros habria que ponerlo en el mercado y juzgar dependiendo de los comentarios de los usuarios.
+El uso del lenguaje de programación Haskell tiene bastantes ventajas y desventajas en cuanto a la capacidad de resolver problemas tal como lo hemos experimentado en este proyecto.  Fue muy entretenido aprender el nuevo lenguaje. Sus características funcionales hicieron que el aprendizaje fuese muy rápido y directo. Entre las desventajas esta la poca información que arrojan los errores en tiempo de ejecución. 
+
+
+Adrián Aguilar. 
+El lenguaje Haskell es bastante distinto a los demás lenguajes que hemos estudiado. Me gusto  el uso extensivo de la herramienta de la recursión.  La recursión le da simplicidad y elegancia al código.
 
 
 
-
-\includegraphics[width=8cm]{imagenes/Screenshot_2013-12-11-08-04-40.png}
 \end{center}
 
 
 \begin{center}
 Scoreboard
 
-\includegraphics[width=8cm]{imagenes/Screenshot_2013-12-11-08-04-54.png}
+
 \end{center}
 
 
